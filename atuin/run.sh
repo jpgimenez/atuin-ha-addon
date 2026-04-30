@@ -1,14 +1,19 @@
 #!/bin/sh
 set -eu
 
-OPEN_REGISTRATION="$(jq -r '.open_registration' /data/options.json)"
-DB_URI="$(jq -r '.db_uri' /data/options.json)"
-HOST="$(jq -r '.host' /data/options.json)"
-PORT="$(jq -r '.port' /data/options.json)"
+# parser berreta pero suficiente
+get_option() {
+  grep "\"$1\"" /data/options.json | sed -E 's/.*: *"?([^",}]*)"?.*/\1/'
+}
 
-export ATUIN_HOST="$HOST"
-export ATUIN_PORT="$PORT"
-export ATUIN_OPEN_REGISTRATION="$OPEN_REGISTRATION"
+OPEN_REGISTRATION="$(get_option open_registration)"
+DB_URI="$(get_option db_uri)"
+HOST="$(get_option host)"
+PORT="$(get_option port)"
+
+export ATUIN_HOST="${HOST:-0.0.0.0}"
+export ATUIN_PORT="${PORT:-8888}"
+export ATUIN_OPEN_REGISTRATION="${OPEN_REGISTRATION:-false}"
 export ATUIN_DB_URI="$DB_URI"
 export RUST_LOG="info,atuin_server=debug"
 
