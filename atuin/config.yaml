@@ -1,0 +1,29 @@
+name: Atuin Server
+version: "18.16.0"
+slug: atuin
+init: false
+description: Self-hosted Atuin sync server using an external PostgreSQL database
+url: "https://github.com/atuinsh/atuin"
+arch:
+  - amd64
+  - aarch64
+startup: services
+boot: auto
+ports:
+  8888/tcp: 8888
+ports_description:
+  8888/tcp: Atuin sync server
+map:
+  - addon_config:rw
+options:
+  db_uri: "postgres://atuin:CHANGE_ME@homeassistant.local:5432/atuin"
+  open_registration: false
+  host: "0.0.0.0"
+  port: 8888
+  rust_log: "info,atuin_server=info"
+schema:
+  db_uri: str
+  open_registration: bool
+  host: str
+  port: port
+  rust_log: str
