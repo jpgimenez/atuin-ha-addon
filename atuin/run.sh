@@ -17,4 +17,4 @@ export ATUIN_OPEN_REGISTRATION="${OPEN_REGISTRATION:-false}"
 export ATUIN_DB_URI="$DB_URI"
 export RUST_LOG="info,atuin_server=debug"
 
-exec start
+exec atuin-server start
