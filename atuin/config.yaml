@@ -1,5 +1,5 @@
 name: Atuin Server
-version: "18.16.0-3"
+version: "18.16.0-4"
 slug: atuin
 init: false
 description: Self-hosted Atuin sync server using an external PostgreSQL database
