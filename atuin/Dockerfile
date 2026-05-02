@@ -1,10 +1,15 @@
-FROM ghcr.io/atuinsh/atuin:18.16.0
+# syntax=docker/dockerfile:1.6
 
-USER root
+ARG ATUIN_VERSION=18.16.0
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:17.2.4
 
-RUN apk add --no-cache bash curl jq
+FROM ghcr.io/atuinsh/atuin:${ATUIN_VERSION} AS atuin
+
+FROM ${BUILD_FROM}
+
+COPY --from=atuin /usr/local/bin/atuin-server /usr/local/bin/atuin-server
 
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
-ENTRYPOINT ["/run.sh"]
+CMD ["/run.sh"]

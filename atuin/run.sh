@@ -1,17 +1,28 @@
-#!/bin/sh
-set -eu
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
 
-OPEN_REGISTRATION=$(jq -r '.open_registration' /data/options.json)
-DB_URI=$(jq -r '.db_uri' /data/options.json)
-HOST=$(jq -r '.host' /data/options.json)
-PORT=$(jq -r '.port' /data/options.json)
+set -e
 
-export ATUIN_HOST="${HOST:-0.0.0.0}"
-export ATUIN_PORT="${PORT:-8888}"
-export ATUIN_OPEN_REGISTRATION="${OPEN_REGISTRATION:-false}"
+DB_URI="$(bashio::config 'db_uri')"
+OPEN_REGISTRATION="$(bashio::config 'open_registration')"
+HOST="$(bashio::config 'host')"
+PORT="$(bashio::config 'port')"
+
+case "$DB_URI" in
+  postgres://*|sqlite://*) ;;
+  *)
+    bashio::log.fatal "db_uri must start with postgres:// or sqlite://. Received: ${DB_URI}"
+    exit 1
+    ;;
+esac
+
+export ATUIN_HOST="$HOST"
+export ATUIN_PORT="$PORT"
+export ATUIN_OPEN_REGISTRATION="$OPEN_REGISTRATION"
 export ATUIN_DB_URI="$DB_URI"
 export RUST_LOG="info,atuin_server=debug"
 
-echo "Using DB: $DB_URI"
+bashio::log.info "Starting Atuin server on ${HOST}:${PORT}"
+bashio::log.info "Using DB URI scheme: ${DB_URI%%://*}"
 
-exec atuin-server start
+exec /usr/local/bin/atuin-server
