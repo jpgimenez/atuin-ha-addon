@@ -9,8 +9,6 @@ FROM ${BUILD_FROM}
 
 COPY --from=atuin /usr/local/bin/atuin-server /usr/local/bin/atuin-server
 
-RUN ldd /usr/local/bin/atuin-server || true
-
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
 

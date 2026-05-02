@@ -25,4 +25,4 @@ export RUST_LOG="info,atuin_server=debug"
 bashio::log.info "Starting Atuin server on ${HOST}:${PORT}"
 bashio::log.info "Using DB URI scheme: ${DB_URI%%://*}"
 
-exec /usr/local/bin/atuin-server
+exec /usr/local/bin/atuin-server start
